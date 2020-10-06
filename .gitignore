@@ -1,0 +1,15 @@
+*
+!.gitignore
+!include/
+!include/**
+!src/
+!src/**
+!ToDo.txt
+!example/
+!example/**
+!unit_tests/
+!CMakeLists.txt
+!cmake/
+!cmake/**
+!LICENSE
+!*README.md

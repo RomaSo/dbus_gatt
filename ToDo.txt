@@ -1,0 +1,15 @@
+- GATT Characteristics
+    - Characteristics without callback
+        - add property Value
+        - OnWrite method store data to `Value property`
+        - OnRead  method return data from `Value property`
+
+    - Notify
+        - Add Notifying property
+        - set Notifying property `true` at StartNotify
+        - set Notifying property `false` at StopNotify
+- Exceptions
+    - Read flags provided but OnRead method is nullptr
+    - Write flags provided but  OnWrite method is nullptr
+    - at instantiation
+    - own bus name optional
