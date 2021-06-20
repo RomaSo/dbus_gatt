@@ -52,19 +52,7 @@ public:
 
     void call(GVariant *p_parameters, GVariant **p_ret) const {
         _callback(*this, p_parameters, p_ret);
-    }
-
-    template<typename T>
-    void returnValue(T value, GVariant **p_ret, bool wrap_tuple) const {
-        *p_ret = GVariantConverter::toGVariantByteArray(value);
-        if (wrap_tuple) {
-            *p_ret = g_variant_new_tuple(p_ret, 1);
-        }
-    }
-
-    void returnValue(uint8_t *p_value, size_t size, GVariant **p_ret, bool wrap_tuple) const {
-        *p_ret = GVariantConverter::toGVariantByteArray(p_value, size);
-        if (wrap_tuple) {
+        if(*p_ret) {
             *p_ret = g_variant_new_tuple(p_ret, 1);
         }
     }
