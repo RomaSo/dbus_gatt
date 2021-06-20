@@ -93,7 +93,7 @@ private:
             std::move(callback)
         );
     }
-    void addMethodOnWriteValue(DBusMethod::CallbackT callback) {
+    void addMethodOnWriteValueWithoutResponse(DBusMethod::CallbackT callback) {
         static const std::vector<std::string> i_args{
             kOrgBluezGattCharacteristicWriteValueInArg1,
             kOrgBluezGattCharacteristicWriteValueInArg2
@@ -103,6 +103,18 @@ private:
             i_args,
             kOrgBluezGattCharacteristicWriteValueOutArgs,
             std::move(callback)
+        );
+    }
+    void addMethodOnWriteValueWithResponse(DBusMethod::CallbackT callback) {
+        static const std::vector<std::string> i_args{
+                kOrgBluezGattCharacteristicWriteValueInArg1,
+                kOrgBluezGattCharacteristicWriteValueInArg2
+        };
+        DBusInterface::addMethod(
+                kOrgBluezGattCharacteristicWriteValueMethodName,
+                i_args,
+                kOrgBluezGattCharacteristicReadValueOutArgs,
+                std::move(callback)
         );
     }
 };

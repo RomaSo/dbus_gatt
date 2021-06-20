@@ -140,21 +140,29 @@ GVariant* GVariantConverter::toGVariantByteArray(const std::string &value) {
 GVariant *GVariantConverter::toGVariantByteArray(const DBusGattVariantT & value) {
     if (std::holds_alternative<int8_t>(value)) {
         return toGVariantByteArray(std::get<int8_t>(value));
-    } else if (std::holds_alternative<uint8_t>(value)) {
+    }
+    if (std::holds_alternative<uint8_t>(value)) {
         return toGVariantByteArray(std::get<uint8_t>(value));
-    } else if (std::holds_alternative<int16_t>(value)) {
+    }
+    if (std::holds_alternative<int16_t>(value)) {
         return toGVariantByteArray(std::get<int16_t>(value));
-    } else if (std::holds_alternative<uint16_t>(value)) {
+    }
+    if (std::holds_alternative<uint16_t>(value)) {
         return toGVariantByteArray(std::get<uint16_t>(value));
-    } else if (std::holds_alternative<int32_t>(value)) {
+    }
+    if (std::holds_alternative<int32_t>(value)) {
         return toGVariantByteArray(std::get<int32_t>(value));
-    } else if (std::holds_alternative<uint32_t>(value)) {
+    }
+    if (std::holds_alternative<uint32_t>(value)) {
         return toGVariantByteArray(std::get<uint32_t>(value));
-    } else if (std::holds_alternative<double>(value)) {
+    }
+    if (std::holds_alternative<double>(value)) {
         return toGVariantByteArray(std::get<double>(value));
-    } else if (std::holds_alternative<std::string>(value)) {
+    }
+    if (std::holds_alternative<std::string>(value)) {
         return toGVariantByteArray(std::get<std::string>(value));
-    } else if (std::holds_alternative<std::pair<uint8_t *, size_t>>(value)) {
+    }
+    if (std::holds_alternative<std::pair<uint8_t *, size_t>>(value)) {
         auto v = std::get<std::pair<uint8_t *, size_t>>(value);
         return toGVariantByteArray(v.first, v.second);
     }

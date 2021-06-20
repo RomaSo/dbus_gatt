@@ -22,6 +22,7 @@
 
 #include "dbus_gatt_characteristic_impl.h"
 #include "dbus_gatt/dbus_gatt_exceptions.h"
+#include "gvariant_converter.h"
 
 namespace dbus_gatt {
 
@@ -88,27 +89,7 @@ void DBusGattCharacteristicImpl::addReadValueMethod(
                     const dbus_gatt::DBusMethod &method,
                     GVariant *p_parameters,
                     GVariant **p_ret) {
-                    auto ret = callback();
-                    if (std::holds_alternative<int8_t>(ret)) {
-                        method.returnValue(std::get<int8_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<uint8_t>(ret)) {
-                        method.returnValue(std::get<uint8_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<int16_t>(ret)) {
-                        method.returnValue(std::get<int16_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<uint16_t>(ret)) {
-                        method.returnValue(std::get<uint16_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<int32_t>(ret)) {
-                        method.returnValue(std::get<int32_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<uint32_t>(ret)) {
-                        method.returnValue(std::get<uint32_t>(ret), p_ret, true);
-                    } else if (std::holds_alternative<double>(ret)) {
-                        method.returnValue(std::get<double>(ret), p_ret, true);
-                    } else if (std::holds_alternative<std::string>(ret)) {
-                        method.returnValue(std::get<std::string>(ret), p_ret, true);
-                    } else if (std::holds_alternative<std::pair<uint8_t *, size_t>>(ret)) {
-                        auto v = std::get<std::pair<uint8_t *, size_t>>(ret);
-                        method.returnValue(v.first, v.second, p_ret, true);
-                    }
+                    *p_ret = GVariantConverter::toGVariantByteArray(callback());
                 }
             );
         } else {
@@ -129,17 +110,29 @@ void DBusGattCharacteristicImpl::addWriteValueMethod(
         flags & kCharacteristicFlagSecureWrite) {
 
         if (callback_on_write) {
-            addMethodOnWriteValue(
-                [callback = std::move(callback_on_write)](const dbus_gatt::DBusMethod &method,
-                                                          GVariant *p_parameters,
-                                                          GVariant **p_ret) {
-                    gsize size;
-                    auto p_var = g_variant_get_child_value(p_parameters, 0);
-                    auto ptr =
-                        reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size, sizeof(uint8_t)));
-                    callback(ptr, size);
-                }
-            );
+            if(flags & kCharacteristicFlagWriteWithoutResponse) {
+                addMethodOnWriteValueWithoutResponse(
+                        [callback = std::move(callback_on_write)](const dbus_gatt::DBusMethod &method,
+                                                                  GVariant *p_parameters,
+                                                                  GVariant **p_ret) {
+                            gsize size;
+                            auto p_var = g_variant_get_child_value(p_parameters, 0);
+                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size, sizeof(uint8_t)));
+                            callback(ptr, size);
+                        }
+                );
+            } else {
+                addMethodOnWriteValueWithResponse(
+                        [callback = std::move(callback_on_write)](const dbus_gatt::DBusMethod &method,
+                                                                  GVariant *p_parameters,
+                                                                  GVariant **p_ret) {
+                            gsize size;
+                            auto p_var = g_variant_get_child_value(p_parameters, 0);
+                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size, sizeof(uint8_t)));
+                            *p_ret = GVariantConverter::toGVariantByteArray(callback(ptr, size));
+                        }
+                );
+            }
         } else {
             throw FlagsWithoutMethodProvided(kOrgBluezGattCharacteristicWriteValueMethodName);
         }

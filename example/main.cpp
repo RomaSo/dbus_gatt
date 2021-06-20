@@ -60,6 +60,7 @@ public:
                         }
 
                         std::cout << (char *) value << std::endl;
+                        return static_cast<int32_t>(0);
                     }
                 ).AddSomeFeature().AddSomeFeature().AddSomeFeature()
             )
