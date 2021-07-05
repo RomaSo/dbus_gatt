@@ -38,8 +38,8 @@ class DBusGATTImpl;
 class DBusGATT {
 public:
     DBusGATT() = delete;
-    bool start();
-    bool stop();
+    virtual bool start();
+    virtual bool stop();
 protected:
     DBusGATT(std::string bus_name, std::string app_path);
     virtual ~DBusGATT() = default;
