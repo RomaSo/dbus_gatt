@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <iostream>
+
 #include "dbus_object.h"
 
 namespace dbus_gatt {

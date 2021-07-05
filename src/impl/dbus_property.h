@@ -24,9 +24,8 @@
 #define DBUS_GATT_DBUS_PROPERTY_H_
 
 #include <string>
-
-#include <gio/gio.h>
 #include <iostream>
+#include <gio/gio.h>
 
 #include "gvariant_converter.h"
 

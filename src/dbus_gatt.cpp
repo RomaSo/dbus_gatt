@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "dbus_gatt/dbus_gatt.h"
-
 #include <memory>
+
+#include "dbus_gatt/dbus_gatt.h"
 #include "impl/dbus_gatt_impl.h"
 
 namespace dbus_gatt {
