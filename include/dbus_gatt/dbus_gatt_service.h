@@ -44,14 +44,17 @@ public:
         return pimpl_;
     }
 
-    std::string name() const{
+    [[nodiscard]] std::string name() const{
         return name_;
     }
 
+    CharacteristicsT::iterator begin() {
+        return characteristics_.begin();
+    }
 
-
-    CharacteristicsT::iterator begin() {return characteristics_.begin();}
-    CharacteristicsT::iterator end()   {return characteristics_.end();}
+    CharacteristicsT::iterator end() {
+        return characteristics_.end();
+    }
 
     void addCharacteristic(DBusGATTCharacteristic characteristic) {
         characteristics_.push_back(std::move(characteristic));

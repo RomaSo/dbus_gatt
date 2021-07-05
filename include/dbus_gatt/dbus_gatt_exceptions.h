@@ -36,7 +36,7 @@ public:
     : error_msg_("method "+ std::move(method_name) + " not allowed without read flags") {
     }
 
-    const char * what () const throw () {
+    [[nodiscard]] const char * what () const throw() override  {
         return error_msg_.c_str();
     }
 private:
@@ -49,7 +49,7 @@ public:
         : error_msg_("method "+ std::move(method_name) + " do not provided") {
     }
 
-    const char * what () const throw () {
+    [[nodiscard]] const char * what () const throw () override {
         return error_msg_.c_str();
     }
 private:
@@ -57,7 +57,7 @@ private:
 };
 
 class NoValidFlagsProvided : public DBusGATTException {
-    const char * what () const throw () {
+    [[nodiscard]] const char * what () const throw () override {
         return "NoValidFlagsProvided";
     }
 };

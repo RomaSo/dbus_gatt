@@ -33,10 +33,11 @@ DBusGATTCharacteristic::DBusGATTCharacteristic(
     CharacteristicOnWriteCallbackT callback_on_write)
 :name_(std::move(name))
 , pimpl_{nullptr} {
-    pimpl_ = std::make_shared<DBusGattCharacteristicImpl>(std::move(uuid), flags, std::move(callback_on_read), std::move(callback_on_write));
-}
-
-DBusGATTCharacteristic::~DBusGATTCharacteristic() {
+    pimpl_ = std::make_shared<DBusGattCharacteristicImpl>( std::move(uuid),
+                                                           flags,
+                                                           std::move(callback_on_read),
+                                                           std::move(callback_on_write)
+                                                           );
 }
 
 } // namespace dbus_gatt

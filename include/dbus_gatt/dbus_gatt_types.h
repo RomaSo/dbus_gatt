@@ -45,7 +45,6 @@ using DBusGattVariantT = std::variant<bool,
 
 using CharacteristicOnReadCallbackT =  std::function<DBusGattVariantT()>;
 using CharacteristicOnWriteCallbackT = std::function<DBusGattVariantT(const uint8_t *, size_t)>;
-
 using DevicePropertyChangedCallbackT = std::function<void(const DBusGattVariantT &value)>;
 
 } // namespace dbus_gatt

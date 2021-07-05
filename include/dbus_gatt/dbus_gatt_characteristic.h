@@ -36,7 +36,7 @@ class DBusGattCharacteristicImpl;
 class DBusGATTCharacteristic {
 public:
     DBusGATTCharacteristic() = delete;
-    ~DBusGATTCharacteristic();
+    ~DBusGATTCharacteristic() = default;
 
     // disable copy
     DBusGATTCharacteristic(const DBusGATTCharacteristic &) = delete;
@@ -50,18 +50,14 @@ public:
         std::string uuid,
         CharacteristicFlag flags,
         CharacteristicOnReadCallbackT callback_on_read,
-        CharacteristicOnWriteCallbackT w_clbk);
+        CharacteristicOnWriteCallbackT callback_on_write);
 
-    std::string name() const {
+    [[nodiscard]] std::string name() const {
         return name_;
     }
 
-    std::shared_ptr<DBusGattCharacteristicImpl> getImpl() const {
+    [[nodiscard]] std::shared_ptr<DBusGattCharacteristicImpl> getImpl() const {
         return pimpl_;
-    }
-
-    DBusGATTCharacteristic AddSomeFeature() {
-        return std::move(*this);
     }
 
 private:
