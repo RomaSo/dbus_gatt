@@ -58,65 +58,19 @@ public:
     }
 
 private:
-    //! Add ReadValue method
-    //! \param flags - CharacteristicFlag if read flags does not provided throw CallbackNotAllowedWithoutFlags
-    //! \param callback_on_read - CharacteristicOnReadCallbackT can be nullptr. if null ptr will be used default method
     void addReadValueMethod(CharacteristicFlag flags, CharacteristicOnReadCallbackT callback_on_read);
+    void setReadValueMethodCallback(DBusMethod::CallbackT callback);
 
-    //! Add WriteValue method
-    //! \param flags - CharacteristicFlag if write flags does not provided throw CallbackNotAllowedWithoutFlags
-    //! \param callback_on_write - CharacteristicOnWriteCallbackT can be nullptr. if null ptr will be used default method
     void addWriteValueMethod(CharacteristicFlag flags, CharacteristicOnWriteCallbackT callback_on_write);
+    void setWriteValueWithoutResponseCallback(DBusMethod::CallbackT callback);
+    void setWriteValueWithResponseCallback(DBusMethod::CallbackT callback);
 
-    //! Add NotifySupport
-    //! \param flags - CharacteristicFlag if read flags does not provided throw CallbackNotAllowedWithoutFlags
     void addNotifySupport(CharacteristicFlag flags);
-
-    //! Add property flags
-    //! \param flags - CharacteristicFlag if read flags does not provided throw CallbackNotAllowedWithoutFlags
-    void addPropertyFlags(CharacteristicFlag flags);
-
-    //! Add property value
-    //! \param value
-    void addPropertyValue(CharacteristicFlag flags, DBusGattVariantT value);
-
     void addMethodStartNotify();
-
     void addMethodStopNotify();
 
-    void addMethodOnReadValue(DBusMethod::CallbackT callback) {
-        static const std::vector<std::string> i_args{kOrgBluezGattCharacteristicReadValueInArgs};
-        DBusInterface::addMethod(
-            kOrgBluezGattCharacteristicReadValueMethodName,
-            i_args,
-            kOrgBluezGattCharacteristicReadValueOutArgs,
-            std::move(callback)
-        );
-    }
-    void addMethodOnWriteValueWithoutResponse(DBusMethod::CallbackT callback) {
-        static const std::vector<std::string> i_args{
-            kOrgBluezGattCharacteristicWriteValueInArg1,
-            kOrgBluezGattCharacteristicWriteValueInArg2
-        };
-        DBusInterface::addMethod(
-            kOrgBluezGattCharacteristicWriteValueMethodName,
-            i_args,
-            kOrgBluezGattCharacteristicWriteValueOutArgs,
-            std::move(callback)
-        );
-    }
-    void addMethodOnWriteValueWithResponse(DBusMethod::CallbackT callback) {
-        static const std::vector<std::string> i_args{
-                kOrgBluezGattCharacteristicWriteValueInArg1,
-                kOrgBluezGattCharacteristicWriteValueInArg2
-        };
-        DBusInterface::addMethod(
-                kOrgBluezGattCharacteristicWriteValueMethodName,
-                i_args,
-                kOrgBluezGattCharacteristicReadValueOutArgs,
-                std::move(callback)
-        );
-    }
+    void addPropertyFlags(CharacteristicFlag flags);
+    void addPropertyValue(CharacteristicFlag flags, DBusGattVariantT value);
 };
 
 } // namespace dbus_gatt

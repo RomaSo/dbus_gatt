@@ -37,19 +37,19 @@ DBusGattCharacteristicImpl::DBusGattCharacteristicImpl(
         flags & kCharacteristicFlagEncryptAuthenticatedRead ||
         flags & kCharacteristicFlagSecureRead) {
 
-        addMethodOnReadValue(
-            [p_self = this](
-                const dbus_gatt::DBusMethod &method,
-                GVariant *p_parameters,
-                GVariant **p_ret) {
-                *p_ret = p_self->getPropertyValue(kOrgBluezGattPropertyValueName);
-                if(*p_ret) {
-                    *p_ret = g_variant_new_tuple(p_ret, 1);
-                    return true;
-                } else {
-                    return false;
+        setReadValueMethodCallback(
+                [p_self = this](
+                        const dbus_gatt::DBusMethod &method,
+                        GVariant *p_parameters,
+                        GVariant **p_ret) {
+                    *p_ret = p_self->getPropertyValue(kOrgBluezGattPropertyValueName);
+                    if (*p_ret) {
+                        *p_ret = g_variant_new_tuple(p_ret, 1);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
-            }
         );
     }
 
@@ -84,13 +84,13 @@ void DBusGattCharacteristicImpl::addReadValueMethod(
         flags & kCharacteristicFlagSecureRead) {
 
         if (callback_on_read) {
-            addMethodOnReadValue(
-                [callback = std::move(callback_on_read)](
-                    const dbus_gatt::DBusMethod &method,
-                    GVariant *p_parameters,
-                    GVariant **p_ret) {
-                    *p_ret = GVariantConverter::toGVariantByteArray(callback());
-                }
+            setReadValueMethodCallback(
+                    [callback = std::move(callback_on_read)](
+                            const dbus_gatt::DBusMethod &method,
+                            GVariant *p_parameters,
+                            GVariant **p_ret) {
+                        *p_ret = GVariantConverter::toGVariantByteArray(callback());
+                    }
             );
         } else {
             throw FlagsWithoutMethodProvided(kOrgBluezGattCharacteristicReadValueMethodName);
@@ -98,6 +98,16 @@ void DBusGattCharacteristicImpl::addReadValueMethod(
     } else if (callback_on_read != nullptr) {
         throw MethodNotAllowedWithoutFlags(kOrgBluezGattCharacteristicReadValueMethodName);
     }
+}
+
+void DBusGattCharacteristicImpl::setReadValueMethodCallback(DBusMethod::CallbackT callback)  {
+    static const std::vector<std::string> i_args{kOrgBluezGattCharacteristicReadValueInArgs};
+    DBusInterface::addMethod(
+            kOrgBluezGattCharacteristicReadValueMethodName,
+            i_args,
+            kOrgBluezGattCharacteristicReadValueOutArgs,
+            std::move(callback)
+    );
 }
 
 void DBusGattCharacteristicImpl::addWriteValueMethod(
@@ -111,24 +121,26 @@ void DBusGattCharacteristicImpl::addWriteValueMethod(
 
         if (callback_on_write) {
             if(flags & kCharacteristicFlagWriteWithoutResponse) {
-                addMethodOnWriteValueWithoutResponse(
+                setWriteValueWithoutResponseCallback(
                         [callback = std::move(callback_on_write)](const dbus_gatt::DBusMethod &method,
                                                                   GVariant *p_parameters,
                                                                   GVariant **p_ret) {
                             gsize size;
                             auto p_var = g_variant_get_child_value(p_parameters, 0);
-                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size, sizeof(uint8_t)));
+                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size,
+                                                                                                   sizeof(uint8_t)));
                             callback(ptr, size);
                         }
                 );
             } else {
-                addMethodOnWriteValueWithResponse(
+                setWriteValueWithResponseCallback(
                         [callback = std::move(callback_on_write)](const dbus_gatt::DBusMethod &method,
                                                                   GVariant *p_parameters,
                                                                   GVariant **p_ret) {
                             gsize size;
                             auto p_var = g_variant_get_child_value(p_parameters, 0);
-                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size, sizeof(uint8_t)));
+                            auto ptr = reinterpret_cast<const uint8_t *>(g_variant_get_fixed_array(p_var, &size,
+                                                                                                   sizeof(uint8_t)));
                             *p_ret = GVariantConverter::toGVariantByteArray(callback(ptr, size));
                         }
                 );
@@ -142,12 +154,64 @@ void DBusGattCharacteristicImpl::addWriteValueMethod(
     }
 }
 
+void DBusGattCharacteristicImpl::setWriteValueWithoutResponseCallback(DBusMethod::CallbackT callback) {
+    static const std::vector<std::string> i_args{
+            kOrgBluezGattCharacteristicWriteValueInArg1,
+            kOrgBluezGattCharacteristicWriteValueInArg2
+    };
+    DBusInterface::addMethod(
+            kOrgBluezGattCharacteristicWriteValueMethodName,
+            i_args,
+            kOrgBluezGattCharacteristicWriteValueOutArgs,
+            std::move(callback)
+    );
+}
+
+void DBusGattCharacteristicImpl::setWriteValueWithResponseCallback(DBusMethod::CallbackT callback) {
+    static const std::vector<std::string> i_args{
+            kOrgBluezGattCharacteristicWriteValueInArg1,
+            kOrgBluezGattCharacteristicWriteValueInArg2
+    };
+    DBusInterface::addMethod(
+            kOrgBluezGattCharacteristicWriteValueMethodName,
+            i_args,
+            kOrgBluezGattCharacteristicReadValueOutArgs,
+            std::move(callback)
+    );
+}
+
 void DBusGattCharacteristicImpl::addNotifySupport(CharacteristicFlag flags) {
     if (flags & kCharacteristicFlagNotify) {
         addMethodStartNotify();
         addMethodStopNotify();
         addProperty(kOrgBluezGattPropertyNotifyingName, false);
     }
+}
+
+void DBusGattCharacteristicImpl::addMethodStartNotify() {
+    DBusInterface::addMethod(
+            kOrgBluezGattCharacteristicStartNotifyMethodName,
+            std::vector<std::string>{},
+            "",
+            [self=this](const dbus_gatt::DBusMethod &method,
+                        GVariant *p_parameters,
+                        GVariant **p_ret) {
+                self->setPropertyValue(kOrgBluezGattPropertyNotifyingName, g_variant_new_boolean(true));
+            }
+    );
+}
+
+void DBusGattCharacteristicImpl::addMethodStopNotify() {
+    DBusInterface::addMethod(
+            kOrgBluezGattCharacteristicStopNotifyMethodName,
+            std::vector<std::string>{},
+            "",
+            [self=this](const dbus_gatt::DBusMethod &method,
+                        GVariant *p_parameters,
+                        GVariant **p_ret) {
+                self->setPropertyValue(kOrgBluezGattPropertyNotifyingName, g_variant_new_boolean(false));
+            }
+    );
 }
 
 void DBusGattCharacteristicImpl::addPropertyFlags(CharacteristicFlag flags) {
@@ -219,32 +283,6 @@ void DBusGattCharacteristicImpl::addPropertyValue(CharacteristicFlag flags, DBus
         flags & kCharacteristicFlagSecureWrite) {
         addProperty(kOrgBluezGattPropertyValueName, GVariantConverter::toGVariantByteArray(value));
     }
-}
-
-void DBusGattCharacteristicImpl::addMethodStartNotify() {
-    DBusInterface::addMethod(
-        kOrgBluezGattCharacteristicStartNotifyMethodName,
-        std::vector<std::string>{},
-        "",
-        [self=this](const dbus_gatt::DBusMethod &method,
-                    GVariant *p_parameters,
-                    GVariant **p_ret) {
-            self->setPropertyValue(kOrgBluezGattPropertyNotifyingName, g_variant_new_boolean(true));
-        }
-    );
-}
-
-void DBusGattCharacteristicImpl::addMethodStopNotify() {
-    DBusInterface::addMethod(
-        kOrgBluezGattCharacteristicStopNotifyMethodName,
-        std::vector<std::string>{},
-        "",
-        [self=this](const dbus_gatt::DBusMethod &method,
-           GVariant *p_parameters,
-           GVariant **p_ret) {
-            self->setPropertyValue(kOrgBluezGattPropertyNotifyingName, g_variant_new_boolean(false));
-        }
-    );
 }
 
 } // namespace dbus_gatt
