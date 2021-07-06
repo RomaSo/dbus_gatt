@@ -66,15 +66,15 @@ std::vector<dbus_gatt::CharacteristicFlag> kTestingWriteFlagsCombination = {
         dbus_gatt::kCharacteristicFlagSecureWrite
 };
 
-class DBusGattCharacteristicTestSuiteCombineFlags
+class CharacteristicTestSuiteCombineFlags
         : public testing::TestWithParam<std::tuple<dbus_gatt::CharacteristicFlag, dbus_gatt::CharacteristicFlag>> {
 };
 
-class DBusGattCharacteristicTestSuiteFlags: public testing::TestWithParam<dbus_gatt::CharacteristicFlag> {
+class CharacteristicTestSuiteFlags : public testing::TestWithParam<dbus_gatt::CharacteristicFlag> {
 };
 
 
-TEST_P(DBusGattCharacteristicTestSuiteCombineFlags, ReadonlyCharacteristicConstructorThrow) {
+TEST_P(CharacteristicTestSuiteCombineFlags, ReadOnlyCharacteristicConstructorThrow) {
     EXPECT_THROW({
                      auto a = dbus_gatt::DBusGattCharacteristicImpl(
                              "fake_uuid",
@@ -86,26 +86,22 @@ TEST_P(DBusGattCharacteristicTestSuiteCombineFlags, ReadonlyCharacteristicConstr
 
 INSTANTIATE_TEST_SUITE_P(
         InvalidFlags,
-        DBusGattCharacteristicTestSuiteCombineFlags,
+        CharacteristicTestSuiteCombineFlags,
         testing::Combine(
                 testing::ValuesIn(kTestingWriteFlagsCombination),
                 testing::ValuesIn(kTestingReadFlagsCombination)
         )
 );
 
-TEST_P(DBusGattCharacteristicTestSuiteFlags, ReadonlyCharacteristicConstructorNoThrow) {
+TEST_P(CharacteristicTestSuiteFlags, ReadOnlyCharacteristicConstructorNoThrow) {
     EXPECT_NO_THROW({
-                     auto a = dbus_gatt::DBusGattCharacteristicImpl(
-                             "fake_uuid",
-                             GetParam(),
-                             dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
-                     );
-                 });
+                        auto a = dbus_gatt::DBusGattCharacteristicImpl(
+                                "fake_uuid",
+                                GetParam(),
+                                dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
+                        );
+                    });
 }
 
-INSTANTIATE_TEST_SUITE_P(
-        ValidFlags,
-        DBusGattCharacteristicTestSuiteFlags,
-        testing::ValuesIn(kTestingReadFlagsCombination)
-);
+INSTANTIATE_TEST_SUITE_P(ValidFlags, CharacteristicTestSuiteFlags, testing::ValuesIn(kTestingReadFlagsCombination));
 

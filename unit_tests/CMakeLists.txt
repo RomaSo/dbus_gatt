@@ -8,9 +8,13 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 include(GoogleTest)
-add_executable(test_characteristic_impl test_characteristic_impl.cpp)
 
-target_link_libraries(test_characteristic_impl
+
+file(GLOB TEST_SRC ${CMAKE_CURRENT_SOURCE_DIR}/unit_test*.cpp)
+
+add_executable(dbus-gatt-unit-test ${TEST_SRC})
+
+target_link_libraries(dbus-gatt-unit-test
         ${PROJECT_NAME}
         ${GLIB_GIO_LIBRARIES}
         ${GLIB_LIBRARIES}
