@@ -66,11 +66,15 @@ std::vector<dbus_gatt::CharacteristicFlag> kTestingWriteFlagsCombination = {
         dbus_gatt::kCharacteristicFlagSecureWrite
 };
 
-class DBusGattCharacteristicTestSuite
+class DBusGattCharacteristicTestSuiteCombineFlags
         : public testing::TestWithParam<std::tuple<dbus_gatt::CharacteristicFlag, dbus_gatt::CharacteristicFlag>> {
 };
 
-TEST_P(DBusGattCharacteristicTestSuite, ReadonlyCharacteristicConstructorThrow) {
+class DBusGattCharacteristicTestSuiteFlags: public testing::TestWithParam<dbus_gatt::CharacteristicFlag> {
+};
+
+
+TEST_P(DBusGattCharacteristicTestSuiteCombineFlags, ReadonlyCharacteristicConstructorThrow) {
     EXPECT_THROW({
                      auto a = dbus_gatt::DBusGattCharacteristicImpl(
                              "fake_uuid",
@@ -82,9 +86,26 @@ TEST_P(DBusGattCharacteristicTestSuite, ReadonlyCharacteristicConstructorThrow) 
 
 INSTANTIATE_TEST_SUITE_P(
         InvalidFlags,
-        DBusGattCharacteristicTestSuite,
+        DBusGattCharacteristicTestSuiteCombineFlags,
         testing::Combine(
                 testing::ValuesIn(kTestingWriteFlagsCombination),
                 testing::ValuesIn(kTestingReadFlagsCombination)
         )
 );
+
+TEST_P(DBusGattCharacteristicTestSuiteFlags, ReadonlyCharacteristicConstructorNoThrow) {
+    EXPECT_NO_THROW({
+                     auto a = dbus_gatt::DBusGattCharacteristicImpl(
+                             "fake_uuid",
+                             GetParam(),
+                             dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
+                     );
+                 });
+}
+
+INSTANTIATE_TEST_SUITE_P(
+        ValidFlags,
+        DBusGattCharacteristicTestSuiteFlags,
+        testing::ValuesIn(kTestingReadFlagsCombination)
+);
+
