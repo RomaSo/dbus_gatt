@@ -8,6 +8,7 @@
 !example/
 !example/**
 !unit_tests/
+!unit_tests/**
 !CMakeLists.txt
 !cmake/
 !cmake/**
