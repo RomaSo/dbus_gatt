@@ -31,29 +31,43 @@ DBusGattCharacteristicImpl::DBusGattCharacteristicImpl(
     CharacteristicFlag flags,
     DBusGattVariantT value)
     : DBusInterface(kOrgBluezGattCharacteristicInterfaceName) {
+    if((flags & kCharacteristicFlagBroadcast ||
+        flags & kCharacteristicFlagWriteWithoutResponse ||
+        flags & kCharacteristicFlagWrite ||
+        flags & kCharacteristicFlagNotify ||
+        flags & kCharacteristicFlagAuthenticatedSignedWrites ||
+        flags & kCharacteristicFlagExtendedProperties ||
+        flags & kCharacteristicFlagReliableWrite ||
+        flags & kCharacteristicFlagWritableAuxiliaries ||
+        flags & kCharacteristicFlagEncryptWrite ||
+        flags & kCharacteristicFlagEncryptAuthenticatedWrite ||
+        flags & kCharacteristicFlagSecureWrite)) {
 
-    if (flags & kCharacteristicFlagRead ||
-        flags & kCharacteristicFlagEncryptRead ||
-        flags & kCharacteristicFlagEncryptAuthenticatedRead ||
-        flags & kCharacteristicFlagSecureRead) {
-
-        setReadValueMethodCallback(
-                [p_self = this](
-                        const dbus_gatt::DBusMethod &method,
-                        GVariant *p_parameters,
-                        GVariant **p_ret) {
-                    *p_ret = p_self->getPropertyValue(kOrgBluezGattPropertyValueName);
-                    if (*p_ret) {
-                        *p_ret = g_variant_new_tuple(p_ret, 1);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-        );
+        throw InvalidCharacteristicFlags("Write flags do not supported for this characteristic");
     }
 
-//    addWriteValueMethod(flags, std::move(callback_on_write));
+    if( !(flags & kCharacteristicFlagRead) &&
+        !(flags & kCharacteristicFlagEncryptRead) &&
+        !(flags & kCharacteristicFlagEncryptAuthenticatedRead) &&
+        !(flags & kCharacteristicFlagSecureRead)) {
+
+        throw InvalidCharacteristicFlags("Read flags do not provided");
+    }
+
+    setReadValueMethodCallback(
+            [p_self = this](
+                    const dbus_gatt::DBusMethod &method,
+                    GVariant *p_parameters,
+                    GVariant **p_ret) {
+                *p_ret = p_self->getPropertyValue(kOrgBluezGattPropertyValueName);
+                if (*p_ret) {
+                    *p_ret = g_variant_new_tuple(p_ret, 1);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+    );
 
     addNotifySupport(flags);
     addPropertyFlags(flags);
@@ -268,7 +282,7 @@ void DBusGattCharacteristicImpl::addPropertyFlags(CharacteristicFlag flags) {
     if (!str_flags.empty()) {
         addProperty(kOrgBluezGattPropertyFlagsName, str_flags);
     } else {
-        throw NoValidFlagsProvided();
+        throw InvalidCharacteristicFlags("no flags provided");
     }
 }
 

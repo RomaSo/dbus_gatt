@@ -56,10 +56,17 @@ private:
     const std::string error_msg_;
 };
 
-class NoValidFlagsProvided : public DBusGATTException {
-    [[nodiscard]] const char * what () const throw () override {
-        return "NoValidFlagsProvided";
+
+class InvalidCharacteristicFlags : public DBusGATTException {
+public:
+    explicit InvalidCharacteristicFlags(std::string message)
+    : what_(std::move(message)) {
     }
+    [[nodiscard]] const char * what () const noexcept override {
+        return what_.c_str();
+    }
+private:
+    std::string what_;
 };
 
 
