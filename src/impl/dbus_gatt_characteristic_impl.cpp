@@ -51,7 +51,7 @@ DBusGattCharacteristicImpl::DBusGattCharacteristicImpl(
         !(flags & kCharacteristicFlagEncryptAuthenticatedRead) &&
         !(flags & kCharacteristicFlagSecureRead)) {
 
-        throw InvalidCharacteristicFlags("Read flags do not provided");
+        throw InvalidCharacteristicFlags("Read flags does not provided");
     }
 
     setReadValueMethodCallback(
