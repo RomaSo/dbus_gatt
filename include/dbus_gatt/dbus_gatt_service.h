@@ -34,7 +34,7 @@ class DBusGattServiceImpl;
 
 class DBusGattService {
 public:
-    using CharacteristicsT = std::vector<DBusGATTCharacteristic>;
+    using CharacteristicsT = std::vector<std::shared_ptr<DBusGATTCharacteristic>>;
 
     DBusGattService() = delete;
     ~DBusGattService() = default;
@@ -56,7 +56,7 @@ public:
         return characteristics_.end();
     }
 
-    void addCharacteristic(DBusGATTCharacteristic characteristic) {
+    void addCharacteristic(std::unique_ptr<DBusGATTCharacteristic> characteristic) {
         characteristics_.push_back(std::move(characteristic));
     }
 

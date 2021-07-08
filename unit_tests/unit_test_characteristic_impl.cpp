@@ -55,7 +55,6 @@ std::vector<dbus_gatt::CharacteristicFlag> kTestingReadFlagsCombination = {
 std::vector<dbus_gatt::CharacteristicFlag> kTestingWriteFlagsCombination = {
         dbus_gatt::kCharacteristicFlagWrite,
         dbus_gatt::kCharacteristicFlagWriteWithoutResponse,
-        dbus_gatt::kCharacteristicFlagWrite,
         dbus_gatt::kCharacteristicFlagNotify,
         dbus_gatt::kCharacteristicFlagAuthenticatedSignedWrites,
         dbus_gatt::kCharacteristicFlagExtendedProperties,

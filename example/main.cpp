@@ -34,6 +34,7 @@ public:
             dbus_gatt::DBusGATT::Service(
                 "device",
                 "0000180a-0000-1000-8000-00805f9b34fb",
+
                 dbus_gatt::DBusGATT::Characteristic(
                     "mfgr_name",
                     "00002a29-0000-1000-8000-00805f9b34fb",

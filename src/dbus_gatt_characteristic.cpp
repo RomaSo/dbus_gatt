@@ -20,24 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+
 #include "dbus_gatt/dbus_gatt_characteristic.h"
-#include "impl/dbus_gatt_characteristic_impl.h"
 
 namespace dbus_gatt {
 
-DBusGATTCharacteristic::DBusGATTCharacteristic(
-    std::string name,
-    std::string uuid,
-    CharacteristicFlag flags,
-    CharacteristicOnReadCallbackT callback_on_read,
-    CharacteristicOnWriteCallbackT callback_on_write)
-:name_(std::move(name))
-, pimpl_{nullptr} {
-    pimpl_ = std::make_shared<DBusGattCharacteristicImpl>( std::move(uuid),
-                                                           flags,
-                                                           std::move(callback_on_read),
-                                                           std::move(callback_on_write)
-                                                           );
+DBusGATTCharacteristic::DBusGATTCharacteristic(std::string name)
+: name_(std::move(name))
+, pimpl_(nullptr) {
 }
 
 } // namespace dbus_gatt

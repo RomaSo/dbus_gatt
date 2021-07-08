@@ -30,6 +30,7 @@
 #include <gio/gio.h>
 #include "dbus_gatt_service.h"
 #include "dbus_gatt_characteristic.h"
+#include "dbus_gatt_characteristic_read_write_callback.h"
 
 namespace dbus_gatt {
 
@@ -62,7 +63,7 @@ protected:
 
 
     template<typename... Arguments>
-    static void Characteristics(DBusGattService * service, DBusGATTCharacteristic characteristic, Arguments&& ... args) {
+    static void Characteristics(DBusGattService * service, std::unique_ptr<DBusGATTCharacteristic> characteristic, Arguments&& ... args) {
         service->addCharacteristic(std::move(characteristic));
         Characteristics(service, std::forward<Arguments>(args)...);
     }
@@ -74,13 +75,13 @@ protected:
         return service;
     }
 
-    static DBusGATTCharacteristic Characteristic(
+    static std::unique_ptr<DBusGATTCharacteristic> Characteristic(
         std::string name,
         const std::string &uuid,
         CharacteristicFlag flags,
         CharacteristicOnReadCallbackT r_clbk = nullptr,
         CharacteristicOnWriteCallbackT w_clbk = nullptr) {
-        return DBusGATTCharacteristic(std::move(name), uuid, flags, std::move(r_clbk), std::move(w_clbk));
+        return std::make_unique<CharacteristicReadWriteCallback>(std::move(name), uuid, flags, std::move(r_clbk), std::move(w_clbk));
     }
 
 private:

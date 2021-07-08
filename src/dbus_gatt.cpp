@@ -34,8 +34,8 @@ DBusGATT::DBusGATT(std::string bus_name, std::string app_path)
 void DBusGATT::addService(std::shared_ptr<DBusGattService> service) {
     auto service_node = p_impl_.addService(service->name(), std::move(service->getImpl()));
     for (const auto &characteristic: *service) {
-        auto child = service_node->createChild(std::move(characteristic.name()));
-        auto characteristic_impl = characteristic.getImpl();
+        auto child = service_node->createChild(std::move(characteristic->name()));
+        auto characteristic_impl = characteristic->getImpl();
         characteristic_impl->setPropertyService(service_node->path());
         child->addInterface(std::move(characteristic_impl));
     }
