@@ -82,7 +82,7 @@ protected:
         CharacteristicFlag flags,
         CharacteristicOnReadCallbackT r_clbk = nullptr,
         CharacteristicOnWriteCallbackT w_clbk = nullptr) {
-        return std::make_unique<CharacteristicReadWriteCallback>(std::move(name), uuid, flags, std::move(r_clbk), std::move(w_clbk));
+        return std::make_unique<CharacteristicCallbackOnReadWrite>(std::move(name), uuid, flags, std::move(r_clbk), std::move(w_clbk));
     }
 
     static std::unique_ptr<DBusGATTCharacteristic> ReadOnlyValueCharacteristic(

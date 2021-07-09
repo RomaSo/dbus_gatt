@@ -9,9 +9,9 @@
 
 namespace dbus_gatt {
 
-class CharacteristicReadWriteCallback : public DBusGATTCharacteristic {
+class CharacteristicCallbackOnReadWrite : public DBusGATTCharacteristic {
 public:
-    CharacteristicReadWriteCallback(
+    CharacteristicCallbackOnReadWrite(
             std::string name,
             std::string uuid,
             CharacteristicFlag flags,

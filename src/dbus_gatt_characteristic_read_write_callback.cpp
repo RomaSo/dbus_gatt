@@ -8,7 +8,7 @@
 
 namespace dbus_gatt {
 
-CharacteristicReadWriteCallback::CharacteristicReadWriteCallback(
+CharacteristicCallbackOnReadWrite::CharacteristicCallbackOnReadWrite(
         std::string name,
         std::string uuid,
         CharacteristicFlag flags,
@@ -36,7 +36,7 @@ CharacteristicReadWriteCallback::CharacteristicReadWriteCallback(
     );
 }
 
-void CharacteristicReadWriteCallback::validateFlags(CharacteristicFlag flags) {
+void CharacteristicCallbackOnReadWrite::validateFlags(CharacteristicFlag flags) {
     if( !(flags & kCharacteristicFlagRead) &&
         !(flags & kCharacteristicFlagEncryptRead) &&
         !(flags & kCharacteristicFlagEncryptAuthenticatedRead) &&
