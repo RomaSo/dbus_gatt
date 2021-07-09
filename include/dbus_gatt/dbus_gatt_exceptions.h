@@ -69,5 +69,16 @@ private:
     std::string what_;
 };
 
+class InvalidUUID : public DBusGATTException {
+public:
+    InvalidUUID(): what_("Invalid dbus uuid") {
+
+    }
+    [[nodiscard]] const char * what () const noexcept override {
+        return what_.c_str();
+    }
+private:
+    std::string what_;
+};
 
 #endif //DBUS_GATT_SRC_DBUS_GATT_EXCEPTIONS_H_
