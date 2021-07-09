@@ -10,15 +10,13 @@ namespace dbus_gatt {
 
 CharacteristicCallbackOnReadWrite::CharacteristicCallbackOnReadWrite(
         std::string name,
-        std::string uuid,
+        GattUUID uuid,
         CharacteristicFlag flags,
         CharacteristicOnReadCallbackT callback_on_read,
         CharacteristicOnWriteCallbackT callback_on_write)
         : DBusGATTCharacteristic(std::move(name)) {
 
     validateFlags(flags);
-
-    //ToDo (RomanSo): validate uuid
 
     if(!callback_on_read) {
         throw std::invalid_argument("callback_on_read is null");
@@ -29,7 +27,7 @@ CharacteristicCallbackOnReadWrite::CharacteristicCallbackOnReadWrite(
     }
 
     pimpl_ = std::make_shared<DBusGattCharacteristicImpl>(
-            std::move(uuid),
+            std::move(uuid.uuid()),
             flags,
             std::move(callback_on_read),
             std::move(callback_on_write)

@@ -82,7 +82,7 @@ protected:
         CharacteristicFlag flags,
         CharacteristicOnReadCallbackT r_clbk = nullptr,
         CharacteristicOnWriteCallbackT w_clbk = nullptr) {
-        return std::make_unique<CharacteristicCallbackOnReadWrite>(std::move(name), uuid, flags, std::move(r_clbk), std::move(w_clbk));
+        return std::make_unique<CharacteristicCallbackOnReadWrite>(std::move(name), GattUUID(uuid), flags, std::move(r_clbk), std::move(w_clbk));
     }
 
     static std::unique_ptr<DBusGATTCharacteristic> ReadOnlyValueCharacteristic(
@@ -90,7 +90,7 @@ protected:
             const std::string &uuid,
             CharacteristicFlag flags,
             dbus_gatt::DBusGattVariantT value) {
-        return std::make_unique<CharacteristicReadOnlyValue>(std::move(name), uuid, flags, std::move(value));
+        return std::make_unique<CharacteristicReadOnlyValue>(std::move(name), GattUUID(uuid), flags, std::move(value));
     }
 
 private:

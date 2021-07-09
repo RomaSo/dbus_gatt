@@ -6,13 +6,14 @@
 #define DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_ONLY_VALUE_H
 
 #include "dbus_gatt_characteristic.h"
+#include "gatt_uuid.h"
 
 namespace dbus_gatt {
 
 class CharacteristicReadOnlyValue : public DBusGATTCharacteristic {
 public:
     CharacteristicReadOnlyValue(std::string name,
-                                std::string uuid,
+                                GattUUID uuid,
                                 CharacteristicFlag flags,
                                 DBusGattVariantT value);
 

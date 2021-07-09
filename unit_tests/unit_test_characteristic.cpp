@@ -14,7 +14,7 @@ TEST_P(CharacteristicTestSuiteFlags, ReadOnlyCharacteristicConstructorValidFlags
     EXPECT_NO_THROW({
                         auto a = dbus_gatt::CharacteristicReadOnlyValue(
                                 "test_read_only_value",
-                                "fake_uuid",
+                                dbus_gatt::GattUUID("00002a31-0000-1000-8000-00805f9b34fb"),
                                 GetParam(),
                                 dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
                         );
@@ -38,7 +38,7 @@ TEST_P(CharacteristicTestSuiteInvalidFlags, ReadOnlyCharacteristicConstructorInv
     EXPECT_THROW({
                         auto a = dbus_gatt::CharacteristicReadOnlyValue(
                                 "test_read_only_value",
-                                "fake_uuid",
+                                dbus_gatt::GattUUID("00002a31-0000-1000-8000-00805f9b34fb"),
                                 GetParam(),
                                 dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
                         );
