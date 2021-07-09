@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <iostream>
 #include "gtest/gtest.h"
 #include "dbus_gatt/dbus_gatt_constants.h"
 #include "dbus_gatt/dbus_gatt_exceptions.h"
@@ -73,34 +72,34 @@ class CharacteristicTestSuiteFlags : public testing::TestWithParam<dbus_gatt::Ch
 };
 
 
-TEST_P(CharacteristicTestSuiteCombineFlags, ReadOnlyCharacteristicConstructorThrow) {
-    EXPECT_THROW({
-                     auto a = dbus_gatt::DBusGattCharacteristicImpl(
-                             "fake_uuid",
-                             std::get<0>(GetParam()) | std::get<1>(GetParam()),
-                             dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
-                     );
-                 }, InvalidCharacteristicFlags);
-}
-
-INSTANTIATE_TEST_SUITE_P(
-        InvalidFlags,
-        CharacteristicTestSuiteCombineFlags,
-        testing::Combine(
-                testing::ValuesIn(kTestingWriteFlagsCombination),
-                testing::ValuesIn(kTestingReadFlagsCombination)
-        )
-);
-
-TEST_P(CharacteristicTestSuiteFlags, ReadOnlyCharacteristicConstructorNoThrow) {
-    EXPECT_NO_THROW({
-                        auto a = dbus_gatt::DBusGattCharacteristicImpl(
-                                "fake_uuid",
-                                GetParam(),
-                                dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
-                        );
-                    });
-}
-
-INSTANTIATE_TEST_SUITE_P(ValidFlags, CharacteristicTestSuiteFlags, testing::ValuesIn(kTestingReadFlagsCombination));
-
+//TEST_P(CharacteristicTestSuiteCombineFlags, ReadOnlyCharacteristicConstructorThrow) {
+//    EXPECT_THROW({
+//                     auto a = dbus_gatt::DBusGattCharacteristicImpl(
+//                             "fake_uuid",
+//                             std::get<0>(GetParam()) | std::get<1>(GetParam()),
+//                             dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
+//                     );
+//                 }, InvalidCharacteristicFlags);
+//}
+//
+//INSTANTIATE_TEST_SUITE_P(
+//        InvalidFlags,
+//        CharacteristicTestSuiteCombineFlags,
+//        testing::Combine(
+//                testing::ValuesIn(kTestingWriteFlagsCombination),
+//                testing::ValuesIn(kTestingReadFlagsCombination)
+//        )
+//);
+//
+//TEST_P(CharacteristicTestSuiteFlags, ReadOnlyCharacteristicConstructorNoThrow) {
+//    EXPECT_NO_THROW({
+//                        auto a = dbus_gatt::DBusGattCharacteristicImpl(
+//                                "fake_uuid",
+//                                GetParam(),
+//                                dbus_gatt::DBusGattVariantT(static_cast<int32_t>(0))
+//                        );
+//                    });
+//}
+//
+//INSTANTIATE_TEST_SUITE_P(ValidFlags, CharacteristicTestSuiteFlags, testing::ValuesIn(kTestingReadFlagsCombination));
+//

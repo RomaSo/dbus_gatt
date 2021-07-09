@@ -63,6 +63,13 @@ public:
                         std::cout << (char *) value << std::endl;
                         return static_cast<int32_t>(0);
                     }
+                ),
+
+                dbus_gatt::DBusGATT::ReadOnlyValueCharacteristic(
+                        "test_read_only_value",
+                        "00002a31-0000-1000-8000-00805f9b34fb",
+                        dbus_gatt::kCharacteristicFlagRead,
+                        dbus_gatt::DBusGattVariantT(static_cast<int32_t>(124))
                 )
             )
         );
