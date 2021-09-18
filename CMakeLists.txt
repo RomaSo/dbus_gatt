@@ -45,7 +45,7 @@ if (BUILD_DBUS_GATT_EXAMPLES)
 endif (BUILD_DBUS_GATT_EXAMPLES)
 
 if (BUILD_UNIT_TESTS)
-    message("ADD UNIT TESTS")
+    enable_testing()
     add_subdirectory(unit_tests)
 endif (BUILD_UNIT_TESTS)
 
