@@ -20,24 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef DBUS_GATT_GATT_SERVICE_H_
-#define DBUS_GATT_GATT_SERVICE_H_
+#ifndef DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_ONLY_VALUE_H
+#define DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_ONLY_VALUE_H
 
-#include "dbus_gatt_app_impl_constants.h"
-#include "dbus_interface.h"
+#include "dbus_gatt_characteristic.h"
+#include "gatt_uuid.h"
 
 namespace dbus_gatt {
 
-class DBusGattServiceImpl: public DBusInterface {
+class CharacteristicReadOnlyValue: public DBusGATTCharacteristic {
 public:
-    explicit DBusGattServiceImpl(const std::string& uuid, bool primary = true)
-    : DBusInterface(kOrgBluezGattServiceInterfaceName) {
-        addProperty("UUID", uuid);
-        addProperty("Primary", primary);
-    }
-    ~DBusGattServiceImpl() final = default;
+    CharacteristicReadOnlyValue(std::string name,
+                                GattUUID uuid,
+                                CharacteristicFlag flags,
+                                DBusGattVariantT value);
+
+    void validateFlags(CharacteristicFlag flags);
 };
 
 }  // namespace dbus_gatt
 
-#endif  //DBUS_GATT_GATT_SERVICE_H_
+#endif  //DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_ONLY_VALUE_H

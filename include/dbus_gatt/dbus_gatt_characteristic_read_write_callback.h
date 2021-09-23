@@ -20,24 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef DBUS_GATT_GATT_SERVICE_H_
-#define DBUS_GATT_GATT_SERVICE_H_
+#ifndef DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_WRITE_CALLBACK_H
+#define DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_WRITE_CALLBACK_H
 
-#include "dbus_gatt_app_impl_constants.h"
-#include "dbus_interface.h"
+#include "dbus_gatt_characteristic.h"
+#include "gatt_uuid.h"
 
 namespace dbus_gatt {
 
-class DBusGattServiceImpl: public DBusInterface {
+class CharacteristicCallbackOnReadWrite: public DBusGATTCharacteristic {
 public:
-    explicit DBusGattServiceImpl(const std::string& uuid, bool primary = true)
-    : DBusInterface(kOrgBluezGattServiceInterfaceName) {
-        addProperty("UUID", uuid);
-        addProperty("Primary", primary);
-    }
-    ~DBusGattServiceImpl() final = default;
+    CharacteristicCallbackOnReadWrite(std::string name,
+                                      GattUUID uuid,
+                                      CharacteristicFlag flags,
+                                      CharacteristicOnReadCallbackT callback_on_read,
+                                      CharacteristicOnWriteCallbackT callback_on_write);
+
+    void validateFlags(CharacteristicFlag flags);
 };
 
 }  // namespace dbus_gatt
 
-#endif  //DBUS_GATT_GATT_SERVICE_H_
+#endif  //DBUS_GATT_DBUS_GATT_CHARACTERISTIC_READ_WRITE_CALLBACK_H

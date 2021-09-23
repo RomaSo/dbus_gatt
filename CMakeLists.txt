@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(UNIT_TESTING "Enable unit testing" OFF)
+option(BUILD_UNIT_TESTS "Enable unit testing" ON)
 option(BUILD_DBUS_GATT_EXAMPLES "Enable unit testing" ON)
 
 find_package(Boost 1.62.0 REQUIRED)
@@ -44,9 +44,10 @@ if (BUILD_DBUS_GATT_EXAMPLES)
     add_subdirectory(example)
 endif (BUILD_DBUS_GATT_EXAMPLES)
 
-if (UNIT_TESTING)
+if (BUILD_UNIT_TESTS)
+    enable_testing()
     add_subdirectory(unit_tests)
-endif (UNIT_TESTING)
+endif (BUILD_UNIT_TESTS)
 
 
 install(TARGETS ${PROJECT_NAME}

@@ -20,24 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef DBUS_GATT_GATT_SERVICE_H_
-#define DBUS_GATT_GATT_SERVICE_H_
-
-#include "dbus_gatt_app_impl_constants.h"
-#include "dbus_interface.h"
+#include "dbus_gatt/gatt_uuid.h"
+#include "dbus_gatt/dbus_gatt_exceptions.h"
+#include "regex"
 
 namespace dbus_gatt {
 
-class DBusGattServiceImpl: public DBusInterface {
-public:
-    explicit DBusGattServiceImpl(const std::string& uuid, bool primary = true)
-    : DBusInterface(kOrgBluezGattServiceInterfaceName) {
-        addProperty("UUID", uuid);
-        addProperty("Primary", primary);
+static constexpr auto kGATT_UUID_RegEx{
+    "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"};
+
+GattUUID::GattUUID(std::string str_uuid) {
+    GattUUID::validate(str_uuid);
+    str_uuid_ = std::move(str_uuid);
+}
+
+void GattUUID::validate(const std::string& str_uuid) {
+    if(!std::regex_match(str_uuid, std::regex(kGATT_UUID_RegEx, std::regex::icase))) {
+        throw InvalidUUID();
     }
-    ~DBusGattServiceImpl() final = default;
-};
+}
+
+std::string GattUUID::uuid() const {
+    return str_uuid_;
+}
 
 }  // namespace dbus_gatt
-
-#endif  //DBUS_GATT_GATT_SERVICE_H_

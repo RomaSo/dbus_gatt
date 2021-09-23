@@ -20,24 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef DBUS_GATT_GATT_SERVICE_H_
-#define DBUS_GATT_GATT_SERVICE_H_
+#ifndef DBUS_GATT_GATT_UUID_H
+#define DBUS_GATT_GATT_UUID_H
 
-#include "dbus_gatt_app_impl_constants.h"
-#include "dbus_interface.h"
+#include <string>
 
 namespace dbus_gatt {
 
-class DBusGattServiceImpl: public DBusInterface {
+class GattUUID {
 public:
-    explicit DBusGattServiceImpl(const std::string& uuid, bool primary = true)
-    : DBusInterface(kOrgBluezGattServiceInterfaceName) {
-        addProperty("UUID", uuid);
-        addProperty("Primary", primary);
-    }
-    ~DBusGattServiceImpl() final = default;
+    explicit GattUUID(std::string str_uuid);
+    static void validate(const std::string& str_uuid);
+    [[nodiscard]] std::string uuid() const;
+private:
+    std::string str_uuid_;
 };
 
 }  // namespace dbus_gatt
 
-#endif  //DBUS_GATT_GATT_SERVICE_H_
+#endif  //DBUS_GATT_GATT_UUID_H
