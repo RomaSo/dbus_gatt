@@ -2,20 +2,20 @@
 //
 // Copyright (c) 2020 RomanSo
 //
-//     Permission is hereby granted, free of charge, to any person obtaining a copy
+// Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
-//     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//     copies of the Software, and to permit persons to whom the Software is
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-//     copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
@@ -38,13 +38,13 @@ public:
 
     DBusGattService() = delete;
     ~DBusGattService() = default;
-    explicit DBusGattService(std::string name, const std::string &uuid, bool primary = true);
+    explicit DBusGattService(std::string name, const std::string& uuid, bool primary = true);
 
     std::shared_ptr<DBusGattServiceImpl> getImpl() {
         return pimpl_;
     }
 
-    [[nodiscard]] std::string name() const{
+    [[nodiscard]] std::string name() const {
         return name_;
     }
 
@@ -59,13 +59,12 @@ public:
     void addCharacteristic(std::unique_ptr<DBusGATTCharacteristic> characteristic) {
         characteristics_.push_back(std::move(characteristic));
     }
-
 private:
     std::string name_;
     std::shared_ptr<DBusGattServiceImpl> pimpl_;
     CharacteristicsT characteristics_;
 };
 
-} // namespace dbus_gatt
+}  // namespace dbus_gatt
 
-#endif //DBUS_GATT_SRC_DBUS_GATT_SERVICE_H_
+#endif  //DBUS_GATT_SRC_DBUS_GATT_SERVICE_H_
